@@ -22,11 +22,10 @@ def index():
     form = IndexForm()
     session.clear()
     if form.login.is_submitted() and form.login.submit.data:
-        user = query_db('SELECT * FROM Users WHERE username="{}";'.format(form.login.username.data), one=True)
+        user = query_db('SELECT * FROM Users WHERE username="{}";'.format(form.login.username.data.replace('"', '""')),(form.login.username.data))
         if user == None:
             flash('Sorry, this user does not exist!')
         elif check_password_hash(user['password'], form.login.password.data):
-            print("username: ",form.login.username.data)
             session['username'] = form.login.username.data
             return redirect(url_for('stream'))
         else:
@@ -89,7 +88,7 @@ def friends():
     username=session.get('username', None)
     user = query_db('SELECT * FROM Users WHERE username="{}";'.format(username), one=True)
     if form.is_submitted():
-        friend = query_db('SELECT * FROM Users WHERE username="{}";'.format(form.username.data), one=True)
+        friend = query_db('SELECT * FROM Users WHERE username="{}";'.format(form.login.username.data.replace('"', '""')),(form.login.username.data))
         if friend is None:
             flash('User does not exist')
         else:
