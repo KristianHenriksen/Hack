@@ -10,6 +10,9 @@ from flask_wtf.file import FileField, FileRequired
 #Generate password hash
 app.secret_key = 'SECRET_KEY'
 
+#add max length for file uploads in bytes
+app.config['MAX_CONTENT_LENGTH'] = 1 * 1000 * 1000
+
 # this file contains all the different routes, and the logic for communicating with the database
 
 # home page/login/registration
