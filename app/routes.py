@@ -55,6 +55,8 @@ def stream():
     user = query_db('SELECT * FROM Users WHERE username="{}";'.format(username), one=True)
     if form.is_submitted():
         if form.image.data:
+            if form.image.data.content_type != "image/png":
+                return
             path = os.path.join(app.config['UPLOAD_PATH'], form.image.data.filename)
             form.image.data.save(path)
 
