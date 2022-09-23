@@ -35,6 +35,7 @@ def index():
 
         #check if username is taken
         user = query_db('SELECT * FROM Users WHERE username="{}";'.format(form.register.username.data), one=True)
+        
         if user != None:
             flash('Sorry, username is already taken!')
             return render_template('index.html', title='Welcome', form=form)
