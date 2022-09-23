@@ -62,7 +62,7 @@ def stream():
             form.image.data.save(path)
 
 
-        query_db('INSERT INTO Posts (u_id, content, image, creation_time) VALUES({}, "{}", "{}", \'{}\');'.format(user['id'], form.content.data, form.image.data.filename, datetime.now()))
+        query_db('INSERT INTO Posts (u_id, content, image, creation_time) VALUES({}, "{}", "{}", \'{}\');'.format(user['id'], form.content.data.replace('"', '""'), form.image.data.filename, datetime.now()))
 
         return redirect(url_for('stream'))
 
