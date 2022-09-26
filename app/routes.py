@@ -35,6 +35,7 @@ def index():
 
         #check if username is taken
         user = query_db('SELECT * FROM Users WHERE username="{}";'.format(form.register.username.data), one=True)
+        
         if user != None:
             flash('Sorry, username is already taken!')
             return render_template('index.html', title='Welcome', form=form)
@@ -63,7 +64,7 @@ def stream():
             form.image.data.save(path)
 
 
-        query_db('INSERT INTO Posts (u_id, content, image, creation_time) VALUES({}, "{}", "{}", \'{}\');'.format(user['id'], form.content.data, form.image.data.filename, datetime.now()))
+        query_db('INSERT INTO Posts (u_id, content, image, creation_time) VALUES({}, "{}", "{}", \'{}\');'.format(user['id'], form.content.data.replace('"', '""'), form.image.data.filename, datetime.now()))
 
         return redirect(url_for('stream'))
 
