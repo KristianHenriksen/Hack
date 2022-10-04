@@ -7,7 +7,15 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileRequired
 from datetime import timedelta
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
 
+
+limiter = Limiter(
+    app ,
+    key_func=get_remote_address,
+    default_limits=["200 per day", "50 per hour"]
+)
 
 app.config['PERMANENT_SESSION_LIFETIME'] =  timedelta(minutes=10)
 #Generate password hash
@@ -21,6 +29,7 @@ app.config['MAX_CONTENT_LENGTH'] = 1 * 1000 * 1000
 # home page/login/registration
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/index', methods=['GET', 'POST'])
+@limiter.limit("10 per minute")
 def index():
     form = IndexForm()
     session.clear()
