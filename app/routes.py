@@ -6,7 +6,10 @@ import os
 from werkzeug.security import generate_password_hash, check_password_hash 
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileRequired
+from datetime import timedelta
 
+
+app.config['PERMANENT_SESSION_LIFETIME'] =  timedelta(minutes=10)
 #Generate password hash
 app.secret_key = 'SECRET_KEY'
 
@@ -41,7 +44,8 @@ def index():
             return render_template('index.html', title='Welcome', form=form)
 
         #check for valid password for new users
-        if form.register.password.data and form.register.password.data == form.register.confirm_password.data:
+        if form.register.password.data and form.register.password.data == form.register.confirm_password.data and len(form.register.password.data)>=12 and re.search('\d.*[A-Z]|[A-Z].*\d', form.register.password.data) != None:
+
             query_db('INSERT INTO Users (username, first_name, last_name, password) VALUES("{}", "{}", "{}", "{}");'.format(form.register.username.data, form.register.first_name.data,
             form.register.last_name.data, generate_password_hash(form.register.password.data)))
             return redirect(url_for('index'))
